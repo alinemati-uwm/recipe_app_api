@@ -1,0 +1,41 @@
+repos:
+  # 🧼 Pre-commit’s built-in formatting and cleanup hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-yaml # ✅ Ensures all YAML files are valid
+      - id: end-of-file-fixer # 📄 Ensures each file ends with a single newline
+      - id: trailing-whitespace # 🔚 Removes any trailing spaces on all lines
+      - id: check-ast # 🧠 Ensures Python files have valid syntax (AST parsing)
+      - id: debug-statements # 🐞 Detects `pdb.set_trace()` and `print()` in Python files
+
+  # 🧪 Flake8 linter: checks code for syntax/style violations
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        entry: pflake8 # Uses `pflake8` (better plugin support)
+        args: ["--max-line-length=100"] # Set max line length to 100 chars
+        additional_dependencies: [pyproject-flake8] # Support for config in pyproject.toml
+        language_version: python3.10
+        exclude: | # Skip linting on these paths
+          (^|/)(migrations|venv|.venv|env|.env|core|tests?)/
+
+  # 🎨 Black code formatter: formats Python code automatically
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
+        args: ["--line-length=100"] # Set line width to 100 characters
+        language_version: python3.10
+        exclude: |
+          (^|/)(migrations|venv|.venv|env|.env|core|tests?)/
+  # 📦 isort: auto-sorts Python imports
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: ["--line-length=100", "--profile=black"] # Match Black's line length and style
+        language_version: python3.10
+        exclude: |
+          (^|/)(migrations|venv|.venv|env|.env|tests?)/
