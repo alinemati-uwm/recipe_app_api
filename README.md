@@ -111,7 +111,7 @@ Django best Practice model:
 
 https://github.com/vahidrnaderi/django-project-structure
 
-
+```bash
 project_root/
 ├── deployments/                # Isolate Dockerfiles and docker-compose files here.
 │   ├── Dockerfile
@@ -214,3 +214,4 @@ project_root/
 ├── setup.cfg
 ├── setup.py
 └── tox.ini
+```
