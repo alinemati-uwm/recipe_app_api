@@ -4,6 +4,7 @@ Django admin customization for the recipe app.
 This module configures the Django admin interface for our custom models,
 extending the default admin functionality to better match our application needs.
 """
+
 from core import models
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin

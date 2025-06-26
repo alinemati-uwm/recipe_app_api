@@ -1,8 +1,10 @@
 """
 Django command to wait for the database to be available.
+
 This command checks for the database connection and waits until it is
 available.
 """
+
 import time
 
 from django.core.management.base import BaseCommand

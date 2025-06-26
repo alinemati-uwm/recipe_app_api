@@ -1,6 +1,5 @@
-"""
-Test cases for the User API.
-"""
+"""Test cases for the User API."""
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -21,6 +20,7 @@ def create_user(**params):
 class PublicUserApiTests(TestCase):
     """
     TestCase for public user API endpoints.
+
     This test class covers the following scenarios:
     - Successful creation of a new user via the public API.
     - Ensuring user passwords are securely hashed and not returned in API responses.

@@ -1,6 +1,4 @@
-"""
-Tests for the models.
-"""
+"""Tests for the models."""
 
 from decimal import Decimal
 

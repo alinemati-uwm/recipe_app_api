@@ -1,6 +1,5 @@
-"""
-Sample test file for the app module.
-"""
+"""Sample test file for the app module."""
+
 from django.test import SimpleTestCase
 
 from app import calc

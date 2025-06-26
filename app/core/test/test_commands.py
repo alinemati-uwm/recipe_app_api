@@ -1,6 +1,5 @@
-"""
-Test Custom Django Management Commands
-"""
+"""Test Custom Django Management Commands."""
+
 from unittest.mock import patch
 
 from django.core.management import call_command

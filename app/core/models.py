@@ -1,20 +1,15 @@
-"""
-Database models for the application.
-"""
+"""Database models for the application."""
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
 
 class UserManager(BaseUserManager):
-    """
-    Custom manager for User model.
-    """
+    """Custom manager for User model."""
 
     def create_user(self, email, password=None, **extra_fields):
-        """
-        Create and return a user with an email and password.
-        """
+        """Create and return a user with an email and password."""
         if not email:
             raise ValueError("The Email field must be set")
 
@@ -27,9 +22,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """
-        Create and return a superuser with an email and password.
-        """
+        """Create and return a superuser with an email and password."""
         user = self.create_user(email, password)
         user.is_staff = True
         user.is_superuser = True
@@ -38,9 +31,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """
-    Custom user model that supports using email instead of a username.
-    """
+    """Custom user model that supports using email instead of a username."""
 
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255)
@@ -57,9 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Recipe(models.Model):
-    """
-    Recipe object.
-    """
+    """Recipe object."""
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

@@ -1,41 +1,155 @@
+# Pre-commit configuration for OSLLMAI Backend
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+# Configuration for specific tools
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit.com hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ""
+  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false
+
+# Upgrade Python syntax
 repos:
-  # 🧼 Pre-commit’s built-in formatting and cleanup hooks
+  - repo: https://github.com/DanielNoord/pydocstringformatter
+    rev: v0.7.3 # use latest tag
+    hooks:
+      - id: pydocstringformatter
+        args: [--write, --style=pep257]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.20.0
+    hooks:
+      - id: pyupgrade
+        args: [--py311-plus]
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
-      - id: check-yaml # ✅ Ensures all YAML files are valid
-      - id: end-of-file-fixer # 📄 Ensures each file ends with a single newline
-      - id: trailing-whitespace # 🔚 Removes any trailing spaces on all lines
-      - id: check-ast # 🧠 Ensures Python files have valid syntax (AST parsing)
-      - id: debug-statements # 🐞 Detects `pdb.set_trace()` and `print()` in Python files
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ["--maxkb=1000"]
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: debug-statements
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+      - id: check-builtin-literals
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
 
-  # 🧪 Flake8 linter: checks code for syntax/style violations
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.0.0
-    hooks:
-      - id: flake8
-        entry: pflake8 # Uses `pflake8` (better plugin support)
-        args: ["--max-line-length=100"] # Set max line length to 100 chars
-        additional_dependencies: [pyproject-flake8] # Support for config in pyproject.toml
-        language_version: python3.10
-        exclude: | # Skip linting on these paths
-          (^|/)(migrations|venv|.venv|env|.env|core|tests?)/
-
-  # 🎨 Black code formatter: formats Python code automatically
+  # Python code formatting with Black
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 25.1.0
     hooks:
       - id: black
-        args: ["--line-length=100"] # Set line width to 100 characters
-        language_version: python3.10
-        exclude: |
-          (^|/)(migrations|venv|.venv|env|.env|core|tests?)/
-  # 📦 isort: auto-sorts Python imports
-  - repo: https://github.com/timothycrosley/isort
-    rev: 5.12.0
+        language_version: python3.11
+        args: [--line-length=100]
+
+  # Import sorting with isort
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
     hooks:
       - id: isort
-        args: ["--line-length=100", "--profile=black"] # Match Black's line length and style
-        language_version: python3.10
-        exclude: |
-          (^|/)(migrations|venv|.venv|env|.env|tests?)/
+        args: [--profile=black, --line-length=100]
+
+  # # Flake8 linting
+  # Flake8 linting
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-docstrings
+          - flake8-import-order
+          - flake8-bugbear
+          - flake8-comprehensions
+          - flake8-simplify
+        args:
+          - --max-line-length=100
+          - --extend-ignore=E203,W503,E402,I100,I101,I201,D100,D104,D105,D106,D401,D102,SIM102
+        exclude: ^.*migrations/.*\.py$
+
+  # MyPy static type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.16.1
+    hooks:
+      - id: mypy
+        additional_dependencies:
+          - django-stubs
+          - types-requests
+          - types-redis
+          - types-PyYAML
+        args: [--ignore-missing-imports, --show-error-codes]
+        exclude: ^(migrations/|tests/|scripts/)
+
+  # # Bandit security linting
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.8.5
+    hooks:
+      - id: bandit
+        args: [-f, json, -o, bandit-report.json]
+        exclude: ^(tests/|migrations/)
+
+  # # Django-specific checks
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: 1.25.0
+    hooks:
+      - id: django-upgrade
+        args: [--target-version, "5.1"]
+
+  # Dockerfile linting
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.13.1-beta
+    hooks:
+      - id: hadolint-docker
+        args: [--ignore, DL3008, --ignore, DL3009]
+
+
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: [-e, SC1091]
+
+
+  # Python security checks
+  # - repo: https://github.com/pyupio/safety
+  #   rev: 3.5.1
+  #   hooks:
+  #     - id: safety
+  #       args: [--ignore=70612]  # Ignore Jinja2 vulnerability in dev dependencies
+
+  # Commit message formatting
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.8.3
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+  # # Remove unused imports
+  - repo: https://github.com/pycqa/autoflake
+    rev: v2.3.1
+    hooks:
+      - id: autoflake
+        args:
+          - --in-place
+          - --remove-all-unused-imports
+          - --remove-unused-variables
+          - --remove-duplicate-keys
+          - --ignore-init-module-imports

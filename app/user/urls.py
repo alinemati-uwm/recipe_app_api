@@ -1,6 +1,4 @@
-"""
-URLs for user management for the API.
-"""
+"""URLs for user management for the API."""
 
 from django.urls import path
 from user import views
