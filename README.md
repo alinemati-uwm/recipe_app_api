@@ -37,6 +37,10 @@ docker compose run --rm app sh -c "python manage.py startapp core"
  docker compose run --rm app sh -c "python manage.py test && flake8"
 ```
 
+```bash
+docker compose run --rm app sh -c "sleep 5 && python manage.py test"
+```
+
 
 ```bash
 docker compose run --rm app sh -c "python manage.py wait_for_db && flake8"
@@ -52,10 +56,16 @@ docker compose up --build
 
 
 add user to project:
-```
+
+```bash
 docker compose run --rm app sh -c "python manage.py makemigrations"
 ```
 
+then migrate the database:
+
+```bash
+docker compose run --rm app sh -c "python manage.py migrate"
+```
 
 
 # how to remove a database in docker:
