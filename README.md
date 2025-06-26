@@ -117,6 +117,11 @@ docker compose run --rm app sh -c "python manage.py startapp user"
 ```
 
 
+
+# Github Repository:
+
+https://github.com/alinemati-uwm/recipe_app_api
+
 Django best Practice model:
 
 https://github.com/vahidrnaderi/django-project-structure
