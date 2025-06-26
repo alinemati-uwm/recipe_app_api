@@ -22,7 +22,6 @@ jobs:
           DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}
           EOF
 
-
       - name: Build Docker images
         run: docker compose build
 
@@ -33,8 +32,12 @@ jobs:
         if: always()
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          MESSAGE: ${{ env.MESSAGE }}
         run: |
           STATUS="${{ job.status }}"
           ICON="✅"
           if [ "$STATUS" = "failure" ]; then ICON="❌"; fi
+          MESSAGE="Workflow *${{ github.workflow }}* finished with status: $ICON $STATUS"
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\": \"$MESSAGE\"}" \
+            "$DISCORD_WEBHOOK"
