@@ -117,6 +117,14 @@ docker compose run --rm app sh -c "python manage.py startapp user"
 ```
 
 
+```docs
+http://127.0.0.1:8000/api/docs
+```
+
+```admin
+http://127.0.0.1:8000/admin
+```
+
 
 # Github Repository:
 
